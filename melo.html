@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Melody</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&family=Pacifico&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #FFE8F0 0%, #FFF0F5 25%, #FFE8EC 50%, #FFF5F7 75%, #FFE8F0 100%);
+            font-family: 'Quicksand', sans-serif;
+        }
+        
+        .message {
+            text-align: center;
+            margin-bottom: 30px;
+            max-width: 600px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(255, 182, 193, 0.3);
+        }
+        
+        .greeting {
+            font-family: 'Pacifico', cursive;
+            font-size: 3em;
+            background: linear-gradient(135deg, #FFB6C1, #DDA0DD, #FF69B4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            filter: drop-shadow(2px 2px 4px rgba(255, 182, 193, 0.3));
+        }
+        
+        h1 {
+            font-family: 'Pacifico', cursive;
+            background: linear-gradient(135deg, #FF69B4, #FFB6C1, #DDA0DD);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 2.8em;
+            margin-bottom: 20px;
+            text-shadow: none;
+            filter: drop-shadow(2px 2px 4px rgba(255, 182, 193, 0.3));
+        }
+        
+        p {
+            color: #B8869D;
+            font-size: 1.3em;
+            line-height: 1.6;
+            font-weight: 600;
+        }
+        
+        .gif-container {
+            position: relative;
+            max-width: 90%;
+            max-height: 60vh;
+        }
+        
+        .gif-container video,
+        .gif-container img {
+            max-width: 100%;
+            max-height: 60vh;
+            height: auto;
+            display: block;
+        }
+        
+        .audio-player {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(255, 182, 193, 0.3);
+        }
+        
+        audio {
+            width: 300px;
+            outline: none;
+        }
+        
+        .start-button {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px 40px;
+            font-size: 1.5em;
+            font-family: 'Pacifico', cursive;
+            background: linear-gradient(135deg, #FF69B4, #FFB6C1);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(255, 105, 180, 0.4);
+            z-index: 1000;
+        }
+        
+        .start-button:hover {
+            transform: translate(-50%, -50%) scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <button id="startButton" class="start-button">▶ Iniciar</button>
+    
+    <audio id="backgroundMusic" loop>
+        <source src="cancion.mp3" type="audio/mpeg">
+    </audio>
+    
+    <div class="message">
+        <div class="greeting">¡Hola Bri! 🌸</div>
+        <h1>Dame más tiempo por favor</h1>
+        <p>Estoy aprendiendo a crear cosas bonitas para ti. Mientras tanto, aquí está My Melody para acompañarte. Te quiero mucho 💕</p>
+    </div>
+    
+    <div class="gif-container">
+        <img id="melodyGif" src="https://i.imgur.com/cxKpr9n.gif" alt="My Melody">
+    </div>
+    
+    <div class="audio-player">
+        <audio id="audioPlayer" controls loop>
+            <source src="cancion.mp3" type="audio/mpeg">
+            Tu navegador no soporta audio.
+        </audio>
+    </div>
+    
+    <script>
+        const audio = document.getElementById('backgroundMusic');
+        const audioPlayer = document.getElementById('audioPlayer');
+        const startButton = document.getElementById('startButton');
+        const gif = document.getElementById('melodyGif');
+        
+        // Forzar loop infinito del GIF recargándolo periódicamente
+        function keepGifAlive() {
+            const currentSrc = gif.src.split('?')[0];
+            gif.src = currentSrc + '?' + new Date().getTime();
+        }
+        
+        // Recargar GIF cada vez que termine (aproximadamente cada 5 segundos)
+        setInterval(keepGifAlive, 5000);
+        
+        // Intentar reproducir audio automáticamente
+        function tryAutoplay() {
+            audio.play().then(() => {
+                audioPlayer.play();
+                console.log('Audio iniciado automáticamente');
+            }).catch(() => {
+                // Si el navegador bloquea autoplay, mostrar botón
+                startButton.style.display = 'block';
+            });
+        }
+        
+        // Botón de inicio manual
+        startButton.addEventListener('click', function() {
+            audio.play();
+            audioPlayer.play();
+            startButton.style.display = 'none';
+        });
+        
+        // Intentar reproducir cuando cargue la página
+        window.addEventListener('load', tryAutoplay);
+        
+        // Intentar reproducir con cualquier interacción
+        document.addEventListener('click', function() {
+            audio.play();
+            audioPlayer.play();
+        }, { once: true });
+        
+        // Intentar reproducir cuando el mouse se mueva
+        document.addEventListener('mousemove', function() {
+            audio.play();
+            audioPlayer.play();
+        }, { once: true });
+    </script>
+</body>
+</html>
